@@ -37,9 +37,7 @@ namespace Pkc
                     File.WriteAllBytes(OutputFile, crypto.Encrypt(File.ReadAllBytes(InputFile), publicKey));
                     break;
                 case JaCryptPkcMode.GenerateKeys:
-                    var p = promptForBigInt("Enter prime number p: ");
-                    var q = promptForBigInt("Enter prime number q: ");
-                    var keyPair = crypto.GenerateKeys(p, q);
+                    var keyPair = crypto.GenerateKeys();
                     keyPair.PublicKey.Save(PublicKeyFile);
                     keyPair.PrivateKey.Save(PrivateKeyFile);
                     break;
@@ -53,7 +51,7 @@ namespace Pkc
             if (JaCryptPkcMode != JaCryptPkcMode.Encrypt && (PrivateKeyFile == string.Empty || PrivateKeyFile == null))
                 PrivateKeyFile = promptForString("Enter path for private key file: ");
 
-            if (JaCryptPkcMode != JaCryptPkcMode.Encrypt && !File.Exists(PrivateKeyFile))
+            if (JaCryptPkcMode == JaCryptPkcMode.Decrypt && !File.Exists(PrivateKeyFile))
                 die("Private key file {0} does not exist!", PrivateKeyFile);
 
             if (JaCryptPkcMode != JaCryptPkcMode.GenerateKeys)

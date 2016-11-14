@@ -4,6 +4,8 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 
+using Pkc.Cryptography;
+
 namespace Pkc
 {
     class MainClass

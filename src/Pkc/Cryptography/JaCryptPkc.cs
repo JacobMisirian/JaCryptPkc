@@ -8,6 +8,13 @@ namespace Pkc.Cryptography
 {
     public class JaCryptPkc
     {
+        private Random rnd;
+
+        public JaCryptPkc()
+        {
+            rnd = new Random();
+        }
+
         public byte[] Decrypt(byte[] message, PublicKey publicKey, PrivateKey privateKey)
         {
             byte[] length = new byte[sizeof(int)];
@@ -30,7 +37,7 @@ namespace Pkc.Cryptography
         public byte[] Encrypt(byte[] message, PublicKey publicKey)
         {
             List<byte> result = new List<byte>();
-            byte[] key = generateRandomBigInteger();
+            byte[] key = generateRandomBigInteger(9);
             byte[] encryptedKey = encryptKey(new BigInteger(key), publicKey.Key, publicKey.E).ToByteArray();
             byte[] encryptedMsg = new JaCrypto().Encrypt(key, message);
             foreach (byte b in BitConverter.GetBytes(encryptedKey.Length))
@@ -45,15 +52,7 @@ namespace Pkc.Cryptography
 
         public KeyPair GenerateKeys()
         {
-            Random rnd = new Random();
-            BigInteger min = BigInteger.Pow(2, 511);
-            BigInteger max = BigInteger.Pow(2, 522);
-
-            while (++min < max)
-            {
-              
-            }
-            return null;
+            return GenerateKeys(generateRandomPrime(2, 511, 2, 512), generateRandomPrime(2, 511, 2, 512));
         }
         public KeyPair GenerateKeys(BigInteger p, BigInteger q)
         {
@@ -73,15 +72,77 @@ namespace Pkc.Cryptography
             return BigInteger.ModPow(m, e, n);
         }
 
-        private byte[] generateRandomBigInteger()
+        private byte[] generateRandomBigInteger(int size)
         {
             List<byte> result = new List<byte>();
-            Prng prng = new Prng((uint)new Random().Next());
-
-            for (int i = 0; i < 9; i++)
-                result.Add(prng.NextByte((byte)i));
+            byte[] b = new byte[1];
+            for (int i = 0; i < size; i++)
+            {
+                rnd.NextBytes(b);
+                result.Add(b[0]);
+            }
 
             return result.ToArray();
+        }
+
+        private BigInteger generateRandomPrime(int minBase, int minExp, int maxBase, int maxExp)
+        {
+            BigInteger min = BigInteger.Pow(minBase, minExp);
+            BigInteger max = BigInteger.Pow(maxBase, maxExp);
+
+            while (++min < max)
+            {
+                if (isPrime(min, 10))
+                {
+                    if (rnd.Next(0, 10) == 1)
+                        return min;
+                }
+            }
+            return -1;
+        }
+
+        private bool isPrime(BigInteger n, int k)
+        {
+            if (n == 2 || n == 3)
+                return true;
+            if (n < 2 || n % 2 == 0)
+                return false;
+
+            BigInteger d = n - 1;
+            int s = 0;
+
+            while (d % 2 == 0)
+            {
+                d /= 2;
+                s += 1;
+            }
+            BigInteger a;
+
+            for (int i = 0; i < k; i++)
+            {
+                do
+                {
+                    a = new BigInteger(generateRandomBigInteger(n.ToByteArray().Length));
+                }
+                while (a < 2 || a >= n - 2);
+
+                BigInteger x = BigInteger.ModPow(a, d, n);
+                if (x == 1 || x == n - 1)
+                    continue;
+
+                for (int j = 0; j < s; j++)
+                {
+                    x = BigInteger.ModPow(x, 2, n);
+                    if (x == 1)
+                        return false;
+                    if (x == n - 1)
+                        return false;
+                }
+
+                if (x != n - 1)
+                    return false;
+            }
+            return true;
         }
 
         private BigInteger modularInverse(BigInteger a, BigInteger b)
