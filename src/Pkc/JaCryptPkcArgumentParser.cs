@@ -74,23 +74,23 @@ namespace Pkc
         private void displayHelp()
         {
             Console.WriteLine("Usage: Pkc.exe [MODE] [OPTIONS] [FILES]");
-            Console.WriteLine("-h --help                  Displays this help and exits.");
+            Console.WriteLine("-h --help                  Displays this help and exits");
 
             Console.WriteLine("\nMODE:");
-            Console.WriteLine("-d --decrypt               Switches to decryption mode.");
-            Console.WriteLine("-e --encrypt               Switches to encryption mode.");
-            Console.WriteLine("-g --generate-keys         Switches to key generation mode.");
+            Console.WriteLine("-d --decrypt               Switches to decryption mode");
+            Console.WriteLine("-e --encrypt               Switches to encryption mode");
+            Console.WriteLine("-g --generate-keys         Switches to key generation mode");
 
             Console.WriteLine("\nOPTIONS:");
-            Console.WriteLine("-k --key-length [INT]      Sets the key length for encryption. Default 128 bytes.");
-            Console.WriteLine("-l --lower-exp [INT]       Sets the exponent 2^x for the minimum prime key generation. Default 511");
-            Console.WriteLine("-u --upper-exp [INT]       Sets the exponent 2^x for the maximum prime key generation. Default 512");
+            Console.WriteLine("-k --key-length   [INT]    Sets the key length for encryption. Default 128 bytes");
+            Console.WriteLine("-l --lower-exp    [INT]    Sets the 2^x for min key generation. Default 511");
+            Console.WriteLine("-u --upper-exp    [INT]    Sets the 2^x for max key generation. Default 512");
 
             Console.WriteLine("\nFILES:");
-            Console.WriteLine("-i --input-file [FILE]     Specifies the input file.");
-            Console.WriteLine("-o --output [FILE]         Specifies the output file.");
-            Console.WriteLine("-pr --private-key [FILE]   Specifies the private key file path.");
-            Console.WriteLine("-pu --public-key [FILE]    Specifies the public key file path.");
+            Console.WriteLine("-i --input-file   [FILE]   Specifies the input file");
+            Console.WriteLine("-o --output       [FILE]   Specifies the output file");
+            Console.WriteLine("-pr --private-key [FILE]   Specifies the private key file path");
+            Console.WriteLine("-pu --public-key  [FILE]   Specifies the public key file path");
 
             die();
         }
