@@ -8,36 +8,6 @@ namespace Pkc.Cryptography
 {
     public class JaCryptPkc
     {
-        public void Test(PublicKey publicKey, PrivateKey privateKey)
-        {
-
-            BigInteger l = new BigInteger(generateRandomBigInteger());
-            if (l < 0)
-                l *= -1;
-            Console.WriteLine("Real number {0}", l);
-            BigInteger encryptedL = encryptKey(l, publicKey.Key, publicKey.E);
-            Console.WriteLine("Encrypted number {0}", encryptedL);
-            BigInteger decryptedL = decryptKey(encryptedL, publicKey.Key, privateKey.Key);
-            Console.WriteLine("Decrypted number {0}", decryptedL);
-        }
-
-
-        public byte[] Encrypt(byte[] message, PublicKey publicKey)
-        {
-            List<byte> result = new List<byte>();
-            byte[] key = generateRandomBigInteger();
-            byte[] encryptedKey = encryptKey(new BigInteger(key), publicKey.Key, publicKey.E).ToByteArray();
-            byte[] encryptedMsg = new JaCrypto().Encrypt(key, message);
-            foreach (byte b in BitConverter.GetBytes(encryptedKey.Length))
-                result.Add(b);
-            foreach (byte b in encryptedKey)
-                result.Add(b);
-            foreach (byte b in encryptedMsg)
-                result.Add(b);
-
-            return result.ToArray();
-        }
-
         public byte[] Decrypt(byte[] message, PublicKey publicKey, PrivateKey privateKey)
         {
             byte[] length = new byte[sizeof(int)];
@@ -57,27 +27,34 @@ namespace Pkc.Cryptography
             return new JaCrypto().Encrypt(decryptedKey.ToByteArray(), data);
         }
 
-        private byte[] generateRandomBigInteger()
+        public byte[] Encrypt(byte[] message, PublicKey publicKey)
         {
             List<byte> result = new List<byte>();
-            Prng prng = new Prng((uint)new Random().Next());
-
-            for (int i = 0; i < 4; i++)
-                result.Add(prng.NextByte((byte)i));
+            byte[] key = generateRandomBigInteger();
+            byte[] encryptedKey = encryptKey(new BigInteger(key), publicKey.Key, publicKey.E).ToByteArray();
+            byte[] encryptedMsg = new JaCrypto().Encrypt(key, message);
+            foreach (byte b in BitConverter.GetBytes(encryptedKey.Length))
+                result.Add(b);
+            foreach (byte b in encryptedKey)
+                result.Add(b);
+            foreach (byte b in encryptedMsg)
+                result.Add(b);
 
             return result.ToArray();
         }
 
-        private BigInteger decryptKey(BigInteger c, BigInteger n, BigInteger d)
+        public KeyPair GenerateKeys()
         {
-            return BigInteger.ModPow(c, d, n);
-        }
+            Random rnd = new Random();
+            BigInteger min = BigInteger.Pow(2, 511);
+            BigInteger max = BigInteger.Pow(2, 522);
 
-        private BigInteger encryptKey(BigInteger m, BigInteger n, BigInteger e)
-        {
-            return BigInteger.ModPow(m, e, n);
+            while (++min < max)
+            {
+              
+            }
+            return null;
         }
-
         public KeyPair GenerateKeys(BigInteger p, BigInteger q)
         {
             BigInteger n = p * q;
@@ -87,27 +64,24 @@ namespace Pkc.Cryptography
             return new KeyPair(n, e, d);
         }
 
-        private BigInteger randomPrime(int min, int max)
+        private BigInteger decryptKey(BigInteger c, BigInteger n, BigInteger d)
         {
-            int n = 0;
-            Random rnd = new Random();
-            while (!isPrime((n = rnd.Next(min, max))))
-                ;
-            return (BigInteger)n;
+            return BigInteger.ModPow(c, d, n);
+        }
+        private BigInteger encryptKey(BigInteger m, BigInteger n, BigInteger e)
+        {
+            return BigInteger.ModPow(m, e, n);
         }
 
-        private bool isPrime(int n)
+        private byte[] generateRandomBigInteger()
         {
-            if (n == 1)
-                return false;
-            if (n == 2)
-                return true;
-            int boundary = (int)Math.Floor(Math.Sqrt(n));
+            List<byte> result = new List<byte>();
+            Prng prng = new Prng((uint)new Random().Next());
 
-            for (int i = 2; i <= boundary; i++)
-                if (n % i == 0)
-                    return false;
-            return true;
+            for (int i = 0; i < 9; i++)
+                result.Add(prng.NextByte((byte)i));
+
+            return result.ToArray();
         }
 
         private BigInteger modularInverse(BigInteger a, BigInteger b)
