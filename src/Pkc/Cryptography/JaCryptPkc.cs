@@ -34,10 +34,10 @@ namespace Pkc.Cryptography
             return new JaCrypto().Encrypt(decryptedKey.ToByteArray(), data);
         }
 
-        public byte[] Encrypt(byte[] message, PublicKey publicKey)
+        public byte[] Encrypt(byte[] message, PublicKey publicKey, int keyLength = 128)
         {
             List<byte> result = new List<byte>();
-            byte[] key = generateRandomBigInteger(9);
+            byte[] key = generateRandomBigInteger(keyLength);
             byte[] encryptedKey = encryptKey(new BigInteger(key), publicKey.Key, publicKey.E).ToByteArray();
             byte[] encryptedMsg = new JaCrypto().Encrypt(key, message);
             foreach (byte b in BitConverter.GetBytes(encryptedKey.Length))
@@ -50,9 +50,9 @@ namespace Pkc.Cryptography
             return result.ToArray();
         }
 
-        public KeyPair GenerateKeys()
+        public KeyPair GenerateKeys(int minExp = 511, int maxExp = 512)
         {
-            return GenerateKeys(generateRandomPrime(2, 511, 2, 512), generateRandomPrime(2, 511, 2, 512));
+            return GenerateKeys(generateRandomPrime(2, minExp, 2, maxExp), generateRandomPrime(2, minExp, 2, maxExp));
         }
         public KeyPair GenerateKeys(BigInteger p, BigInteger q)
         {

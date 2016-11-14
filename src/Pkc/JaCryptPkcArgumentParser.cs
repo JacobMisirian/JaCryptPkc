@@ -45,6 +45,14 @@ namespace Pkc
                     case "--output":
                         config.OutputFile = expectData("file");
                         break;
+                    case "-k":
+                    case "--key-length":
+                        config.KeyLength = Convert.ToInt32(expectData("length"));
+                        break;
+                    case "-l":
+                    case "--lower-exp":
+                        config.MinExponent = Convert.ToInt32(expectData("min exp"));
+                        break;
                     case "-pr":
                     case "--private-key":
                         config.PrivateKeyFile = expectData("private key");
@@ -52,6 +60,10 @@ namespace Pkc
                     case "-pu":
                     case "--public-key":
                         config.PublicKeyFile = expectData("public key");
+                        break;
+                    case "-u":
+                    case "--upper-exp":
+                        config.MaxExponent = Convert.ToInt32(expectData("max exp"));
                         break;
                 }
             }
@@ -61,13 +73,18 @@ namespace Pkc
 
         private void displayHelp()
         {
-            Console.WriteLine("Usage: Pkc.exe [MODE] [FILES]");
+            Console.WriteLine("Usage: Pkc.exe [MODE] [OPTIONS] [FILES]");
             Console.WriteLine("-h --help                  Displays this help and exits.");
 
             Console.WriteLine("\nMODE:");
             Console.WriteLine("-d --decrypt               Switches to decryption mode.");
             Console.WriteLine("-e --encrypt               Switches to encryption mode.");
             Console.WriteLine("-g --generate-keys         Switches to key generation mode.");
+
+            Console.WriteLine("\nOPTIONS:");
+            Console.WriteLine("-k --key-length [INT]      Sets the key length for encryption. Default 128 bytes.");
+            Console.WriteLine("-l --lower-exp [INT]       Sets the exponent 2^x for the minimum prime key generation. Default 511");
+            Console.WriteLine("-u --upper-exp [INT]       Sets the exponent 2^x for the maximum prime key generation. Default 512");
 
             Console.WriteLine("\nFILES:");
             Console.WriteLine("-i --input-file [FILE]     Specifies the input file.");

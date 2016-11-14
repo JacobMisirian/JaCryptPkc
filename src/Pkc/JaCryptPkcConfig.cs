@@ -10,11 +10,22 @@ namespace Pkc
     {
         public JaCryptPkcMode JaCryptPkcMode { get; set; }
 
+        public int KeyLength { get; set; }
+        public int MinExponent { get; set; }
+        public int MaxExponent { get; set; }
+
         public string PublicKeyFile { get; set; }
         public string PrivateKeyFile { get; set; }
 
         public string InputFile { get; set; }
         public string OutputFile { get; set; }
+
+        public JaCryptPkcConfig()
+        {
+            KeyLength = 128;
+            MinExponent = 511;
+            MaxExponent = 512;
+        }
 
         public void Execute()
         {
@@ -34,10 +45,10 @@ namespace Pkc
                     break;
                 case JaCryptPkcMode.Encrypt:
                     publicKey = PublicKey.FromFile(PublicKeyFile);
-                    File.WriteAllBytes(OutputFile, crypto.Encrypt(File.ReadAllBytes(InputFile), publicKey));
+                    File.WriteAllBytes(OutputFile, crypto.Encrypt(File.ReadAllBytes(InputFile), publicKey, KeyLength));
                     break;
                 case JaCryptPkcMode.GenerateKeys:
-                    var keyPair = crypto.GenerateKeys();
+                    var keyPair = crypto.GenerateKeys(MinExponent, MaxExponent);
                     keyPair.PublicKey.Save(PublicKeyFile);
                     keyPair.PrivateKey.Save(PrivateKeyFile);
                     break;
