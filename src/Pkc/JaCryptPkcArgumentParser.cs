@@ -65,6 +65,9 @@ namespace Pkc
                     case "--upper-exp":
                         config.MaxExponent = Convert.ToInt32(expectData("max exp"));
                         break;
+                    default:
+                        die("Unexpected flag or data {0}!", args[position]);
+                        break;
                 }
             }
 

@@ -47,9 +47,12 @@
     <Compile Include="Cryptography\PrivateKey.cs" />
     <Compile Include="Cryptography\PublicKey.cs" />
     <Compile Include="Cryptography\JaCryptPkc.cs" />
+    <Compile Include="IO\JaCryptPkcBinaryReader.cs" />
+    <Compile Include="IO\JaCryptPkcBinaryWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Cryptography\" />
+    <Folder Include="IO\" />
   </ItemGroup>
 </Project>

@@ -91,13 +91,9 @@ namespace Pkc.Cryptography
             BigInteger max = BigInteger.Pow(maxBase, maxExp);
 
             while (++min < max)
-            {
                 if (isPrime(min, 10))
-                {
                     if (rnd.Next(0, 10) == 1)
                         return min;
-                }
-            }
             return -1;
         }
 
